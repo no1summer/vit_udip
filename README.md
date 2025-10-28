@@ -1,18 +1,19 @@
 # ViT-UDIP: Vision Transformer for Unsupervised Deep Image Processing
 
-A PyTorch implementation of Vision Transformer (ViT) for unsupervised deep image processing, specifically designed for medical image reconstruction and analysis.
+A PyTorch implementation of Vision Transformer (ViT) for unsupervised image deep learning, specifically designed for extracting meaningful features from medical images for genetic discovery and GWAS analysis.
 
 ## Overview
 
-ViT-UDIP is a Vision Transformer-based autoencoder that learns meaningful representations from medical images through unsupervised reconstruction. The model uses 3D patch embedding, positional encoding, and transformer blocks to process volumetric medical data.
+ViT-UDIP is a Vision Transformer-based autoencoder that learns meaningful representations from medical images through unsupervised reconstruction. The model uses 3D patch embedding, positional encoding, and transformer blocks to process volumetric medical data and extract deep features for downstream genetic analysis.
 
 ## Key Features
 
 - **3D Vision Transformer Architecture**: Processes volumetric medical images using 3D patches
-- **Unsupervised Learning**: Learns representations through reconstruction without labels
+- **Unsupervised Feature Learning**: Learns meaningful representations through reconstruction without labels
+- **Genetic Discovery Focus**: Designed specifically for extracting features for GWAS analysis
 - **Efficient Patch Processing**: Optimized for non-zero patches to reduce computational overhead
 - **Distributed Training**: Supports multi-GPU training with PyTorch DDP
-- **Medical Image Focus**: Designed specifically for brain MRI data processing
+- **Medical Image Processing**: Specialized for brain MRI data analysis
 
 ## Architecture
 
@@ -55,7 +56,7 @@ pip install -r requirements.txt
 
 ## Quick Start
 
-### Training
+### Training for Feature Extraction
 
 ```python
 from vit_udip.models import UDIPViT_engine
@@ -78,11 +79,11 @@ train_dataset = MedicalImageDataset(
     modality="T1_unbiased_linear"
 )
 
-# Train model
+# Train model for feature extraction
 train_model(model, train_dataset, num_epochs=300)
 ```
 
-### Feature Extraction
+### Feature Extraction for GWAS
 
 ```python
 from vit_udip.models import UDIPViT_engine
@@ -91,21 +92,62 @@ from vit_udip.utils.feature_extraction import extract_features
 # Load trained model
 model = UDIPViT_engine.from_checkpoint("path/to/checkpoint.pth")
 
-# Extract features
+# Extract features from medical images
 features = extract_features(model, "path/to/image.nii.gz")
+
+# Features can now be used for GWAS analysis
+print(f"Extracted features shape: {features.shape}")
 ```
 
-### Reconstruction
+### Batch Feature Extraction
 
 ```python
-from vit_udip.models import UDIPViT_engine
-from vit_udip.utils.reconstruction import reconstruct_image
+from vit_udip.utils.feature_extraction import extract_features_batch
 
-# Load trained model
-model = UDIPViT_engine.from_checkpoint("path/to/checkpoint.pth")
+# Extract features from multiple images
+image_paths = ["path/to/image1.nii.gz", "path/to/image2.nii.gz"]
+all_features = extract_features_batch(model, image_paths, device="cuda")
 
-# Reconstruct image
-reconstructed = reconstruct_image(model, "path/to/image.nii.gz", output_path="reconstruction.nii.gz")
+# Stack features for analysis
+stacked_features = torch.stack(all_features)
+print(f"Batch features shape: {stacked_features.shape}")
+```
+
+## Use Cases
+
+### 1. Genetic Discovery Pipeline
+
+```python
+# 1. Train ViT-UDIP on medical images
+model = train_model(train_dataset)
+
+# 2. Extract features from all subjects
+features = extract_features_batch(model, all_image_paths)
+
+# 3. Save features for GWAS analysis
+torch.save(features, "extracted_features.pt")
+
+# 4. Use features in downstream genetic analysis
+# Features can be correlated with genetic variants, phenotypes, etc.
+```
+
+### 2. Phenotype-Genotype Association
+
+The extracted features can be used to:
+- **Identify genetic variants** associated with brain structure
+- **Discover novel phenotypes** from medical imaging data
+- **Perform GWAS analysis** using deep learning features
+- **Study population genetics** across different ethnicities
+
+### 3. Multi-Modal Analysis
+
+```python
+# Extract features from different modalities
+t1_features = extract_features(model_t1, t1_images)
+t2_features = extract_features(model_t2, t2_images)
+
+# Combine features for comprehensive analysis
+combined_features = torch.cat([t1_features, t2_features], dim=1)
 ```
 
 ## File Structure
@@ -121,21 +163,51 @@ vit_udip/
 │   ├── __init__.py
 │   ├── positional_encoding.py
 │   ├── patch_embedding.py
-│   └── attention.py
+│   ├── attention.py
+│   ├── feature_extraction.py
+│   └── reconstruction.py
 ├── data/             # Data handling
 │   ├── __init__.py
-│   ├── dataset.py
-│   └── transforms.py
+│   └── dataset.py
 ├── training/          # Training scripts
 │   ├── __init__.py
-│   ├── trainer.py
-│   └── validation.py
+│   └── trainer.py
 ├── examples/         # Example scripts
 │   ├── train_example.py
 │   └── inference_example.py
 └── docs/            # Documentation
     ├── architecture.md
     └── api_reference.md
+```
+
+## Research Applications
+
+This package is designed for research in:
+
+- **Medical Imaging Genetics**: Discovering genetic variants that influence brain structure
+- **Population Genetics**: Studying genetic diversity across populations
+- **Phenotype Discovery**: Identifying novel imaging-based phenotypes
+- **GWAS Analysis**: Using deep learning features for genome-wide association studies
+- **Multi-Ethnic Studies**: Analyzing genetic effects across different ethnic groups
+
+## Performance
+
+- **Feature Extraction**: ~128-dimensional features per subject
+- **Training Time**: ~300 epochs for convergence
+- **Memory Usage**: Optimized for GPU training with batch processing
+- **Scalability**: Supports large-scale population studies
+
+## Citation
+
+If you use this code in your research, please cite:
+
+```bibtex
+@article{vit_udip_2024,
+  title={ViT-UDIP: Vision Transformer for Unsupervised Deep Image Processing in Genetic Discovery},
+  author={no1summer},
+  journal={Your Journal},
+  year={2024}
+}
 ```
 
 ## License
@@ -150,4 +222,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 - Based on the Vision Transformer architecture
 - Inspired by UDIP (Unsupervised Deep Image Processing) methodology
-- Designed for medical image analysis applications
+- Designed for medical image analysis and genetic discovery applications
