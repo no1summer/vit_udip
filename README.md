@@ -197,19 +197,6 @@ This package is designed for research in:
 - **Memory Usage**: Optimized for GPU training with batch processing
 - **Scalability**: Supports large-scale population studies
 
-## Citation
-
-If you use this code in your research, please cite:
-
-```bibtex
-@article{vit_udip_2024,
-  title={ViT-UDIP: Vision Transformer for Unsupervised Deep Image Processing in Genetic Discovery},
-  author={no1summer},
-  journal={Your Journal},
-  year={2024}
-}
-```
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
