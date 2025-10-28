@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vit-udip"
+dynamic = ["version"]
+description = "Vision Transformer for Unsupervised Deep Image Processing"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "no1summer", email = "steveissummer@gmail.com"},
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=1.12.0",
+    "torchvision>=0.13.0",
+    "nibabel>=3.2.0",
+    "pandas>=1.3.0",
+    "numpy>=1.21.0",
+    "scikit-image>=0.19.0",
+    "tqdm>=4.62.0",
+    "tensorboard>=2.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.0",
+    "black>=21.0",
+    "flake8>=3.9",
+    "mypy>=0.910",
+]
+
+[project.urls]
+Homepage = "https://github.com/no1summer/vit-udip"
+Repository = "https://github.com/no1summer/vit-udip"
+Documentation = "https://github.com/no1summer/vit-udip#readme"
+"Bug Tracker" = "https://github.com/no1summer/vit-udip/issues"
+
+[tool.setuptools]
+packages = ["vit_udip"]
+
+[tool.setuptools_scm]
+write_to = "vit_udip/_version.py"
